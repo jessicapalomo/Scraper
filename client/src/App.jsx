@@ -1,28 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { AppContextProvider } from './context/AppContext';
-import ContextDemo from './components/ContextDemo';
-
+import React, { useState, useEffect, useContext } from 'react';
+import { AppContext } from './context/AppContext';
+import News from './components/News';
+import Loading from './components/Loading';
 import './App.css';
 
 const App = () => {
-  const [serverMessage, setServerMessage] = useState('');
+  const { loading, setLoading } = useContext(AppContext);
+  const [news, setNews] = useState(null);
 
-  const fetchDemoData = () => {
-    fetch('/api/demo')
+  const fetchTheNews = () => {
+    setLoading(true);
+    fetch('/api/news')
       .then((response) => response.json())
-      .then((data) => setServerMessage(data.message));
+      .then((data) => {
+        setLoading(false);
+        setNews(data);
+      });
   };
 
-  useEffect(fetchDemoData, []);
+  useEffect(fetchTheNews, []);
 
   return (
-    <AppContextProvider>
-      <div id="demo">
-        <h3>Hello from client/src/App.js</h3>
-        <ContextDemo />
-        <h3>{serverMessage}</h3>
+    <>
+      <div className="container d-flex flex-wrap justify-content-center py-5">
+        <News news={news} />
       </div>
-    </AppContextProvider>
+      <div className="d-flex justify-content-center">
+        <Loading loading={loading} />
+      </div>
+    </>
   );
 };
 
