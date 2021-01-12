@@ -5,14 +5,9 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const path = require('path');
 const app = express();
+const newsRouter = require('./routes/');
 
-// JUST FOR DEMO PURPOSES, PUT YOUR ACTUAL API CODE HERE
-app.get('/api/demo', (request, response) => {
-  response.json({
-    message: 'Hello from server.js'
-  });
-});
-// END DEMO
+app.use(newsRouter);
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
